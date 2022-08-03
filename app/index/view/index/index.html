@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="/public/static/layui/css/layui.css" rel="stylesheet">            <!--加载layui框架CSS -->
+    <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>   <!-- Ajax提交需要加载此css -->
+    <script src="/public/static/layui/layui.js"></script>
+    <title>留言框</title>
+</head>
+<body>
+    <div class="title">留言系统</div>
+
+<form class="layui-form"  style="margin-top: 50px;" >    <!--style="margin-top 上边框距离-->
+
+
+    <div class="layui-container" />
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">称呼</label>
+        <div class="layui-input-block">
+            <input type="text" name="name" required  lay-verify="required" placeholder="请输入你的称呼" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">电话</label>
+        <div class="layui-input-block">
+            <input type="text" name="mobile" required  lay-verify="required" placeholder="请输入你的电话" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">邮箱</label>
+        <div class="layui-input-block">
+            <input type="text" name="email" required  lay-verify="required" placeholder="请输入你的邮箱" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">内容</label>
+        <div class="layui-input-block">
+            <textarea name="content" placeholder="请输入内容" class="layui-textarea"></textarea>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <div class="layui-btn" lay-submit onclick="message()" >立即提交</div>    <!--onclick  执行message()  方法-->
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+
+</form>
+
+    <table class="layui-table">
+        <colgroup>
+            <col width="150">
+            <col width="200">
+            <col>
+            <col>
+            <col>
+            <col>
+            <col>
+        </colgroup>
+        <thead>
+        <tr>
+            <th>id</th>
+            <th>称呼</th>
+            <th>电话</th>
+            <th>邮箱</th>
+            <th>内容</th>
+            <th>时间</th>
+        </tr>
+        </thead>
+        <tbody>
+         {volist name="messageDate" id="vo"}    <!--olist模板中循环输出数据集或者多维数组-->
+        <tr>
+            <td>{$vo.id}</td>
+            <td>{$vo.name}</td>
+            <td>{$vo.mobile}</td>
+            <td>{$vo.email}</td>
+            <td>{$vo.content}</td>
+            <td>{$vo.time|date='Y-m-d H:i:s'}</td>
+
+
+        </tr>
+        {/volist}
+        </tbody>
+        </div>
+
+    </table>
+
+    {$messageDate|raw}   <!--html分页显示-->
+    <style>
+        .pagination {
+            display: inline-block;
+            padding-left: 0;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .pagination > li {
+            display: inline;
+        }
+        .pagination > li > a,
+        .pagination > li > span {
+            position: relative;
+            float: left;
+            padding: 6px 12px;
+            margin-left: -1px;
+            line-height: 1.42857143;
+            color: #337ab7;
+            text-decoration: none;
+            background-color: #fff;
+            border: 1px solid #ddd;
+        }
+        .pagination > li:first-child > a,
+        .pagination > li:first-child > span {
+            margin-left: 0;
+            border-top-left-radius: 4px;
+            border-bottom-left-radius: 4px;
+        }
+        .pagination > li:last-child > a,
+        .pagination > li:last-child > span {
+            border-top-right-radius: 4px;
+            border-bottom-right-radius: 4px;
+        }
+        .pagination > li > a:hover,
+        .pagination > li > span:hover,
+        .pagination > li > a:focus,
+        .pagination > li > span:focus {
+            z-index: 2;
+            color: #23527c;
+            background-color: #eee;
+            border-color: #ddd;
+        }
+        .pagination > .active > a,
+        .pagination > .active > span,
+        .pagination > .active > a:hover,
+        .pagination > .active > span:hover,
+        .pagination > .active > a:focus,
+        .pagination > .active > span:focus {
+            z-index: 3;
+            color: #fff;
+            cursor: default;
+            background-color: #337ab7;
+            border-color: #337ab7;
+        }
+        .pagination > .disabled > span,
+        .pagination > .disabled > span:hover,
+        .pagination > .disabled > span:focus,
+        .pagination > .disabled > a,
+        .pagination > .disabled > a:hover,
+        .pagination > .disabled > a:focus {
+            color: #777;
+            cursor: not-allowed;
+            background-color: #fff;
+            border-color: #ddd;
+        }
+    </style>
+    <script type="text/javascript">
+        function message() {
+            var name = $("input[name='name']").val();
+            /!*获取name值*!/
+            var mobile = $("input[name='mobile']").val();
+            var email = $("input[name='email']").val();
+            var content = $("input[name='content']").val();
+            //去除空格
+            name = name.replace(/\s/g,"");
+            mobile = mobile.replace(/\s/g,"");
+            email = email.replace(/\s/g,"")
+
+           /* if (name.length<1){
+                alert('请输入称呼');
+                return false;
+            }
+            if (!(/^[1][3,4,5,7,8,9][0-9]{9}$/.test(mobile))){
+                layui.use('layer', function(){
+                    var layer = layui.layer;
+
+                    layer.msg('请输入正确的手机号');
+                });
+                return false;
+            }
+           if (!(/^\S+@\S+\.\S{2,}$/ .test(email))){
+               layui.use('layer', function(){
+                   var layer = layui.layer;
+
+                   layer.msg('请输入正确的邮箱');
+               });
+                return false;
+           }*/
+
+            $.ajax({
+                //几个参数需要注意一下
+                type: "POST",//方法类型
+                dataType: "json",//预期服务器返回的数据类型
+                url: "/public/index.php/index/index/message" ,//url
+                data: $('.layui-form').serialize(),
+                success: function (result) {
+                        layui.use('layer', function(){
+                            var layer = layui.layer;
+                            layer.msg(result.msg);
+                        });
+                     /* window.setTimeout(function () {
+                            window.location.reload();
+                        },5000) */  //延迟刷新页面*
+
+                },
+                error : function() {
+                    layui.use('layer', function(){
+                        var layer = layui.layer;
+                        layer.msg('提交异常');
+                    });
+                    /*window.setTimeout(function () {
+                        window.location.reload();
+                    },5000)*///延迟刷新页面*
+
+
+                }
+                }
+
+
+
+            );
+        }
+
+
+
+    </script>
+    <style>
+        .title{
+            font-size: 42PX;
+            width: 100%;
+            text-align:center;
+            margin-top: 50px;
+        }
+    </style>
+
+
+</body>
+</html>
